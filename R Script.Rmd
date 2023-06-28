@@ -1,0 +1,78 @@
+---
+title: "Deference Code"
+output: html_document
+date: "2023-04-03"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(haven)
+library(tidyverse)
+library(dplyr)
+library(broom)
+library(ggplot2)
+library(jtools)
+library(huxtable)
+library(tidyr)
+library(ggpubr)
+library(survival)
+library(survminer)
+library(scales)
+library(lme4)
+library(clarify)
+library(plm)
+library(effects)
+library(ggeffects)
+library(margins)
+library(xtable)
+library(stargazer)
+library(modelsummary)
+library(textreg)
+library(gtsummary)
+library(ggsurvfit)
+library(rms)
+library(pROC)
+
+# Use relevant pathname setwd("###/newcombinedtable")
+
+# Import the data from the CSV file
+newcombinedtable <- read.csv("newcombinedtable.csv")
+```
+
+## Model Regressions
+```{r}
+
+# Please reach out to me for the full code.
+
+```
+
+## Visual Representations 
+```{r}
+## Survival and Hazard Rate Curves - Similar/Different Religions
+# Create a survival object
+surv_obj <- Surv(time = newcombinedtable$T1, event = newcombinedtable$acceptanceTRUNCATED)
+# Create a survival curve for each level of "samespecificreligion"
+survfit_obj <- survfit(surv_obj ~ samespecificreligion, data = newcombinedtable)
+
+# Plot the cumulative hazard curve
+plot(survfit_obj, fun = "cumhaz", xlab = "Time", ylab = "Cumulative hazard",
+     col = c("blue", "red"), lty = c(1, 2), main = "Cumulative Hazard of Acceptance: Same and Different Religions")
+legend("topright", legend = c("Different religion", "Same religion"), col = c("blue", "red"), lty = c(1, 2))
+
+# Plot the survival rate curve
+plot(survfit_obj, fun = "surv", xlab = "Time", ylab = "Survival rate", col = c("blue", "red"), lty = c(1, 2), main = "Survival Rate of Acceptance: Same and Different Religions")
+legend("bottomleft", legend = c("Different religion", "Same religion"), col = c("blue", "red"), lty = c(1, 2))
+
+# Kaplan-Meier Plot
+survfit2(Surv(time = newcombinedtable$T1) ~ 1, data = newcombinedtable) %>% 
+  ggsurvfit() +
+  labs(title = "Overall Kaplan-Meier Plot",
+    x = "Years (T1)",
+    y = "Overall survival probability"
+  ) + 
+  add_confidence_interval()
+
+```
+
+# Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
